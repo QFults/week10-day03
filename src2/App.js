@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import axios from 'axios'
 
 const App = () => {
@@ -19,6 +19,15 @@ const App = () => {
       })
       .catch(err => console.error(err))
   }
+
+  useEffect(() => {
+    axios.get('http://www.omdbapi.com/?apikey=trilogy&t=Goodfellas')
+      .then(({ data: movie }) => {
+        setMovieState({ ...movieState, movie, title: '' })
+      })
+      .catch(err => console.error(err))
+  }, [])
+
   return (
     <>
       <form>
