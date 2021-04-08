@@ -1,76 +1,41 @@
 import { useState } from 'react'
-import Card from './components/Card'
+import axios from 'axios'
 
 const App = () => {
-  const [songState, setSongState] = useState({
+  const [movieState, setMovieState] = useState({
     title: '',
-    artist: '',
-    album: '',
-    songs: []
+    movie: {}
   })
 
   const handleInputChange = ({ target }) => {
-    setSongState({ ...songState, [target.name]: target.value })
+    setMovieState({ ...movieState, [target.name]: target.value })
   }
 
-  const handleAddSong = event => {
+  const handleSearchMovie = event => {
     event.preventDefault()
-    const songs = [...songState.songs]
-    songs.push({
-      title: songState.title,
-      artist: songState.artist,
-      album: songState.album
-    })
-    setSongState({
-      ...songState,
-      songs,
-      title: '',
-      artist: '',
-      album: ''
-    })
+    axios.get(`http://www.omdbapi.com/?apikey=trilogy&t=${movieState.title}`)
+      .then(({ data: movie }) => {
+        setMovieState({ ...movieState, movie, title: '' })
+      })
+      .catch(err => console.error(err))
   }
-
   return (
     <>
-      <h1>Hello World!</h1>
       <form>
         <p>
           <label htmlFor='title'>title</label>
           <input
             type='text'
             name='title'
-            value={songState.title}
+            value={movieState.title}
             onChange={handleInputChange}
           />
         </p>
-        <p>
-          <label htmlFor='artist'>artist</label>
-          <input
-            type='text'
-            name='artist'
-            value={songState.artist}
-            onChange={handleInputChange}
-          />
-        </p>
-        <p>
-          <label htmlFor='album'>album</label>
-          <input
-            type='text'
-            name='album'
-            value={songState.album}
-            onChange={handleInputChange}
-          />
-        </p>
-        <p>
-          <button onClick={handleAddSong}>Add Song</button>
-        </p>
+        <button onClick={handleSearchMovie}>Search Movie</button>
       </form>
       <div>
-        {
-          songState.songs.length
-            ? songState.songs.map((song, i) => <Card key={i} song={song} />)
-            : null
-        }
+        <h1>Title: {movieState.movie.Title}</h1>
+        <p>Plot: {movieState.movie.Plot}</p>
       </div>
     </>
   )
