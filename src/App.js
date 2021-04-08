@@ -1,43 +1,35 @@
-import { useState } from 'react'
-import axios from 'axios'
+import {
+  BrowserRouter as Router,
+  Route,
+  Switch,
+  Link
+} from 'react-router-dom'
+import Home from './pages/Home'
+import Login from './pages/Login'
+import Profile from './pages/Profile'
 
 const App = () => {
-  const [movieState, setMovieState] = useState({
-    title: '',
-    movie: {}
-  })
-
-  const handleInputChange = ({ target }) => {
-    setMovieState({ ...movieState, [target.name]: target.value })
-  }
-
-  const handleSearchMovie = event => {
-    event.preventDefault()
-    axios.get(`http://www.omdbapi.com/?apikey=trilogy&t=${movieState.title}`)
-      .then(({ data: movie }) => {
-        setMovieState({ ...movieState, movie, title: '' })
-      })
-      .catch(err => console.error(err))
-  }
   return (
-    <>
-      <form>
-        <p>
-          <label htmlFor='title'>title</label>
-          <input
-            type='text'
-            name='title'
-            value={movieState.title}
-            onChange={handleInputChange}
-          />
-        </p>
-        <button onClick={handleSearchMovie}>Search Movie</button>
-      </form>
+    <Router>
       <div>
-        <h1>Title: {movieState.movie.Title}</h1>
-        <p>Plot: {movieState.movie.Plot}</p>
+        <div>
+          <Link to='/'>home</Link>
+          <Link to='/login'>login</Link>
+          <Link to='/profile'>profile</Link>
+        </div>
+        <Switch>
+          <Route exact path='/'>
+            <Home />
+          </Route>
+          <Route path='/login'>
+            <Login />
+          </Route>
+          <Route path='/profile'>
+            <Profile />
+          </Route>
+        </Switch>
       </div>
-    </>
+    </Router>
   )
 }
 
