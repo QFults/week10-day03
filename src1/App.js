@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import SongContext from './utils/SongContext'
+import Useless from './components/Useless'
 import Card from './components/Card'
 
 const App = () => {
@@ -9,11 +11,11 @@ const App = () => {
     songs: []
   })
 
-  const handleInputChange = ({ target }) => {
+  songState.handleInputChange = ({ target }) => {
     setSongState({ ...songState, [target.name]: target.value })
   }
 
-  const handleAddSong = event => {
+  songState.handleAddSong = event => {
     event.preventDefault()
     const songs = [...songState.songs]
     songs.push({
@@ -32,46 +34,17 @@ const App = () => {
 
   return (
     <>
-      <h1>Hello World!</h1>
-      <form>
-        <p>
-          <label htmlFor='title'>title</label>
-          <input
-            type='text'
-            name='title'
-            value={songState.title}
-            onChange={handleInputChange}
-          />
-        </p>
-        <p>
-          <label htmlFor='artist'>artist</label>
-          <input
-            type='text'
-            name='artist'
-            value={songState.artist}
-            onChange={handleInputChange}
-          />
-        </p>
-        <p>
-          <label htmlFor='album'>album</label>
-          <input
-            type='text'
-            name='album'
-            value={songState.album}
-            onChange={handleInputChange}
-          />
-        </p>
-        <p>
-          <button onClick={handleAddSong}>Add Song</button>
-        </p>
-      </form>
-      <div>
-        {
-          songState.songs.length
-            ? songState.songs.map((song, i) => <Card key={i} song={song} />)
-            : null
-        }
-      </div>
+      <SongContext.Provider value={songState}>
+        <h1>Hello World!</h1>
+        <Useless />
+        <div>
+          {
+            songState.songs.length
+              ? songState.songs.map((song, i) => <Card key={i} song={song} />)
+              : null
+          }
+        </div>
+      </SongContext.Provider>
     </>
   )
 }
